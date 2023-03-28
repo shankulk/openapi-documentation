@@ -1,0 +1,53 @@
+import org.codehaus.groovy.runtime.GStringImpl
+
+buildscript {
+	ext {
+		OPENAPI_OUTPUT_SRC_DIR = "${rootDir}/openapi/" as GStringImpl
+	}
+}
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.0.5'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id "org.openapi.generator" version "6.3.0"
+}
+
+group = 'com.shankulk'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+apply from: 'gradle/openapi.gradle'
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	implementation 'io.swagger.core.v3:swagger-core'
+	implementation 'javax.validation:validation-api:2.0.1.Final'
+	implementation 'javax.annotation:javax.annotation-api:1.3.2'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.14'
+	implementation 'org.openapitools:jackson-databind-nullable:0.2.1'
+	compileOnly 'javax.servlet:servlet-api:2.5'
+	testCompileOnly 'javax.servlet:servlet-api:2.5'
+
+
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs += "${OPENAPI_OUTPUT_SRC_DIR}/src/main/java"
+		}
+	}
+}

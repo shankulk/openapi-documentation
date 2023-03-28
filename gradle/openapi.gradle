@@ -1,0 +1,42 @@
+openApiGenerate {
+    generatorName = 'spring'
+    inputSpec = "${rootDir}/openapi.yaml".toString()
+    outputDir = "${OPENAPI_OUTPUT_SRC_DIR}".toString()
+
+    apiPackage = 'com.shankulk.api'
+    invokerPackage = 'com.shankulk.generated.invoker'
+    modelPackage = 'com.shankulk.dto'
+    configOptions = [
+            validateSpec           : "false",
+            interfaceOnly          : "true",
+            hideGenerationTimestamp: "true",
+            useResponseEntity      : "false",
+            useTags                : "true"
+    ]
+}
+
+openApiValidate {
+    inputSpec = "${rootDir}/openapi.yaml".toString()
+}
+
+tasks.openApiGenerate {
+    inputs.files file('openapi.yaml')
+    outputs.dir file("${OPENAPI_OUTPUT_SRC_DIR}")
+}
+
+tasks.register('cleanOpenApi', Delete) {
+    delete "${OPENAPI_OUTPUT_SRC_DIR}".toString()
+}
+
+configure(cleanOpenApi) {
+    group 'openapi tools'
+}
+
+//compileJava.dependsOn tasks.openApiGenerate
+
+compileJava {
+    dependsOn  tasks.openApiGenerate
+    source "${OPENAPI_OUTPUT_SRC_DIR}/src/main/java"
+}
+
+tasks.openApiGenerate.dependsOn cleanOpenApi
