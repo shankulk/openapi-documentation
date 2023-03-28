@@ -11,6 +11,7 @@ openApiGenerate {
             interfaceOnly          : "true",
             hideGenerationTimestamp: "true",
             useResponseEntity      : "false",
+            useSwaggerUI           : "true",
             useTags                : "true"
     ]
 }
